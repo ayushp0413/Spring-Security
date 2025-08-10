@@ -1,0 +1,142 @@
+# Spring Security 6
+
+# create user entity
+# create repository and create methods findByUserName
+# UserDetailedService implementation to fetch the user
+# SpringSecurityConfig class
+
+# Data base AWS URI
+spring.data.mongodb.uri=mongodb+srv://ayushpatidar7441:HCky5RoMcMfBxdY4@cluster0.62mcckg.mongodb.net/
+spring.data.mongodb.database=learn_spring_boot
+[10-08-2025 16:16]
+
+
+#FLOW OF PUBLIC API ROUTE
+
+Example: GET http://localhost:8080/public/create-user
+Step-by-step:
+
+Request Enters Spring Security Filter Chain
+The SecurityFilterChain evaluates your path against the rules.
+/public/create-user matches .anyRequest().permitAll() → no authentication required.
+
+CSRF Disabled
+Since .csrf(csrf -> csrf.disable()) is set, POST/PUT requests work without CSRF tokens.
+
+No Authentication Triggered
+Security does not call UserDetailsServiceImpl because this endpoint is public.
+
+Controller method executes directly.
+Your Controller Handles It
+In your public controller, you call userService.addUser(user).
+This hashes the password with BCryptPasswordEncoder and saves the user in MongoDB.
+
+
+# Flow for a Protected Endpoint
+Example: PUT http://localhost:8080/learn/update-user (with Basic Auth in Postman)
+
+Step-by-step:
+
+Request Hits SecurityFilterChain
+Path /learn/update-user matches .requestMatchers("/learn/").authenticated() → requires authentication.
+
+HTTP Basic Auth Kicks In
+Because .httpBasic(withDefaults()) is set, Spring looks for an Authorization: Basic ... header.
+
+Spring Calls Your UserDetailsServiceImpl
+The username from Basic Auth is passed to loadUserByUsername(username).
+Your service fetches the User from MongoDB via UserRepository.findByUsername(username).
+
+If found:
+Spring compares the password from Basic Auth (raw) with the hashed password in DB using BCryptPasswordEncoder.matches(...).
+If match → authentication successful.
+If no match or user missing → 401 Unauthorized.
+
+Controller Executes
+The controller method can now get the Authentication object from SecurityContextHolder.
+
+You fetch the current DB user, update it, and save changes.
+
+Alternatives to .httpBasic()
+1. Form Login
+http.formLogin(withDefaults());
+Shows a login page (HTML form) for browser clients.
+Stores the session in the browser, so you don’t need to send credentials with every request.
+
+2. Bearer Token (JWT or OAuth2)
+http.oauth2ResourceServer(oauth2 -> oauth2.jwt());
+Client sends an Authorization: Bearer <token> header.
+
+Token is validated (e.g., JWT signature or OAuth2 introspection).
+Best for: APIs, stateless authentication, microservices.
+Requires you to generate and issue tokens after login.
+
+3. API Key Authentication
+You define a custom filter to look for a header like X-API-Key: <key>.
+No password; just a secret key.
+Best for: server-to-server communication, internal APIs.
+Example filter:
+
+4. Session-Based Authentication (Cookie)
+Works with .formLogin() but can also be set up manually.
+Client logs in once → server stores session ID in a cookie → client sends cookie on every request.
+Best for: stateful web applications.
+
+5. Mutual TLS (mTLS)
+Authentication is based on client-side SSL certificates.
+No username/password — trust is based on the certificate presented.
+Best for: highly secure backend services.
+✅ In your API scenario, the most common replacements for .httpBasic() are:
+
+JWT Bearer Tokens for stateless APIs.
+
+Session-based login for browser apps.
+
+
+
+# Authentication vs Authorization
+Authentication → Confirms who you are (via Basic Auth, JWT, etc.).
+Authorization → Checks what you can do (via roles & permissions).
+
+Here’s why your UserDetailsServiceImpl gets called without you ever manually referencing it:
+
+1️⃣ Spring Boot Auto-Wiring
+
+You marked your class with
+@Component
+public class UserDetailsServiceImpl implements UserDetailsService
+@Component → Spring finds it during component scanning.
+Spring now has exactly one bean in the context that implements the interface UserDetailsService.
+
+2️⃣ Spring Security’s Default Behavior
+When Spring Security needs to authenticate a username/password, it asks the application context:
+“Do you have a bean that implements UserDetailsService?”
+
+If yes, it automatically uses that bean.
+If no, it falls back to its in-memory default user (user / generated password).
+
+3️⃣ Where the call happens in the request flow
+When you enable httpBasic or formLogin, Spring Security’s authentication filter:
+
+Extracts username/password from request.
+Calls AuthenticationManager.authenticate(...).
+That calls a DaoAuthenticationProvider under the hood.
+DaoAuthenticationProvider calls:
+
+
+userDetailsService.loadUserByUsername(username)
+That’s your UserDetailsServiceImpl.
+
+You never had to wire it manually because Spring Boot autoconfig did the linking.
+
+4️⃣ If you had multiple UserDetailsService beans
+If there’s more than one, Spring would complain about ambiguity — and you’d have to explicitly pick one in your AuthenticationManager config:
+
+
+auth.userDetailsService(myCustomService);
+
+So in short:
+Your UserDetailsServiceImpl is invoked automatically because:
+1. It’s a @Component (bean in the context).
+2. It’s the only UserDetailsService bean.
+3. Spring Security auto-wires it into its internal authentication provider.
