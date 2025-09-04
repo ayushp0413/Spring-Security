@@ -30,7 +30,6 @@ public class SpringSecurity {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // call UserDetailsServiceImpl
                         .anyRequest().permitAll() // do not call UserDetailsServiceImpl, controller method directly invoke
                 ).httpBasic(withDefaults());
-
         return http.build();
     }
 

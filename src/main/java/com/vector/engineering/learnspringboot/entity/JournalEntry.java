@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-@Document(collation = "journal_entries")
+@Document(collection = "journal_entries")
 public class JournalEntry {
 
     @Id

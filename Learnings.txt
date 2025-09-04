@@ -1,0 +1,17 @@
+
+
+
+YAML / YML file :- Different ways to set properties
+
+
+Junit - separate code
+
+Profiles :-
+
+
+Logging :- Logger and SLf4j
+
+SonarQube :- for code quality
+
+
+
