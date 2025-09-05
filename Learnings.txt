@@ -1,17 +1,33 @@
 
+# Git Commands :-
+git checkout -b office-branch
+git add .
+git commit -m "Changes made from office laptop"
+git push origin office-branch
+gh pr create --base main --head office-branch --title "Office updates" --body "Changes made from office laptop"
 
 
-YAML / YML file :- Different ways to set properties
+# YAML / YML file :- Different ways to set properties
+Priority of property sources in Spring Boot (from highest to lowest):
+1️⃣  Command-line arguments	--server.port=9090 (via CLI or IntelliJ Program Arguments)
+2️⃣	Java System properties	-Dserver.port=9090
+3️⃣	Environment variables	SERVER_PORT=9090
+4️⃣	application.properties / application.yml	Inside src/main/resources
+5️⃣	Default values in code	SpringApplication.setDefaultProperties(...)
 
+Profiles :- to switch between different environments
 
 Junit - separate code
 
-Profiles :-
-
-
 Logging :- Logger and SLf4j
+Log on JournalService -> getById method (by default)
+Now, logback.xml file -> preferable
+
+
+
 
 SonarQube :- for code quality
+
 
 
 

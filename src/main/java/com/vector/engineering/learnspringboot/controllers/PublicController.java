@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/public")
 public class PublicController {
@@ -26,5 +28,12 @@ public class PublicController {
         userService.addUser(user);
         return ResponseEntity.ok("USER Added");
     }
+
+    @GetMapping("/all-users")
+    public ResponseEntity<List<User>> getAllUsers()
+    {
+        return ResponseEntity.ok(userService.getAllUser());
+    }
+
 
 }

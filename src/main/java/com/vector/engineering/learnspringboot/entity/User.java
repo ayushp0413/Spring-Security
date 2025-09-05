@@ -70,4 +70,15 @@ public class User {
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", journalEntries=" + journalEntries +
+                ", roles=" + roles +
+                '}';
+    }
 }
