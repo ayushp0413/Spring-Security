@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class JournalService {
@@ -29,7 +27,7 @@ public class JournalService {
     public void createEntry(JournalEntry journalEntry, String username)
     {
         Optional<User> user = userRepository.findByUsername(username);
-        // 100% present
+        // 100% present, ye context se mila hai
         journalEntry.setCreatedDate(LocalDate.now());
         journalRepository.save(journalEntry);
         user.get().getJournalEntries().add(journalEntry);

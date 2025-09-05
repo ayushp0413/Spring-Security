@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<User> user = userRepository.findByUsername(username);  // postman me Auth header me send kiya hai
+        Optional<User> user = userRepository.findByUsername(username);  // postman me Auth header me send kiya hai username
         if(user.isPresent())
         {
             return org.springframework.security.core.userdetails.User.builder()

@@ -19,6 +19,7 @@ public class PublicController {
         return "Application running fine!";
     }
 
+    // testing purpose
     @PostMapping("/add")
     public ResponseEntity<String> addUser(@RequestBody User user)
     {
