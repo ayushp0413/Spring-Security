@@ -34,7 +34,7 @@ public class UserController {
         User dbUSer = userService.findByUsername(username);
         dbUSer.setUsername(user.getUsername());
         dbUSer.setPassword(user.getPassword());
-        userService.addUser(dbUSer);
+        userService.addUser(dbUSer); // with password encoding
         dbUSer.setPassword(null);
         return ResponseEntity.ok(dbUSer);
     }
