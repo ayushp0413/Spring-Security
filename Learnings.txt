@@ -23,10 +23,9 @@ Logging :- Logger and SLf4j
 Log on JournalService -> getById method (by default)
 Now, logback.xml file -> preferable
 
-
-
-
 SonarQube :- for code quality
+
+External Apis Calling  - RestTemplate
 
 
 
