@@ -1,7 +1,9 @@
 package com.vector.engineering.learnspringboot.services;
 
+import com.vector.engineering.learnspringboot.cache.AppCache;
 import com.vector.engineering.learnspringboot.dto.QuoteResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,8 +12,15 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class QuotesService {
 
-    private static final String API_KEY = "bnx267wV6TNgdFfRkgKadw==mAQyU3p4tz4W0j44";
-    private static final String API = "https://api.api-ninjas.com/v1/quotes/";
+    @Value("${QUOTE_API_KEY}")
+    private String API_KEY;
+
+//    Now this is coming from the DB (@PostConstruct)
+//    @Value("${QUOTE_API_URL}")
+//    private String API;
+
+    @Autowired
+    private AppCache appCache;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -22,7 +31,7 @@ public class QuotesService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
 
-        ResponseEntity<QuoteResponseDto[]> response  = restTemplate.exchange(API, HttpMethod.GET, entity, QuoteResponseDto[].class);
+        ResponseEntity<QuoteResponseDto[]> response  = restTemplate.exchange(appCache.appCacheMap.get(AppCache.KEYS.quotes_api.toString()), HttpMethod.GET, entity, QuoteResponseDto[].class);
         if(response.getStatusCode() == HttpStatus.OK && response.getBody() != null)
         {
             System.out.println(response.getBody());

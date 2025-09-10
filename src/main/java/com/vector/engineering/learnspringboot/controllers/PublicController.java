@@ -1,8 +1,11 @@
 package com.vector.engineering.learnspringboot.controllers;
 
+import com.vector.engineering.learnspringboot.entity.ConfigJournalApp;
 import com.vector.engineering.learnspringboot.entity.User;
+import com.vector.engineering.learnspringboot.repository.ConfigJournalAppRepository;
 import com.vector.engineering.learnspringboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

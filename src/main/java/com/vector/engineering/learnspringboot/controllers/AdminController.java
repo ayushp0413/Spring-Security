@@ -1,6 +1,9 @@
 package com.vector.engineering.learnspringboot.controllers;
 
+import com.vector.engineering.learnspringboot.cache.AppCache;
+import com.vector.engineering.learnspringboot.entity.ConfigJournalApp;
 import com.vector.engineering.learnspringboot.entity.User;
+import com.vector.engineering.learnspringboot.repository.ConfigJournalAppRepository;
 import com.vector.engineering.learnspringboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,9 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AppCache appCache;
+
     @GetMapping("all-users")
     public ResponseEntity<?> allUsers()
     {
@@ -30,6 +36,12 @@ public class AdminController {
         }
         return new ResponseEntity<>(allUser, HttpStatus.NOT_FOUND);
 
+    }
+
+    @GetMapping("/clear-app-cache")
+    public void clearAppCache()
+    {
+        appCache.init();    // it recreates the map and loads the data from DB
     }
 
 }
