@@ -19,6 +19,9 @@ target/
 *.iml
 *.ipr
 .gitattributes
+*.yml
+
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
